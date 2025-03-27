@@ -15,9 +15,12 @@ def ejecutar_hanoi(metodo, discos):
     # Medir tiempo de ejecución
     duracion, movimientos = medir_tiempo_y_ejecutar(funcion, discos)
 
-    # Mostrar movimientos
-    for i, (disk, src, dst) in enumerate(movimientos, 1):
-        print(f"Mover disco {disk} de {src} a {dst}")
+    # Mostrar movimientos solo si discos <= 10
+    if discos <= 10:
+        for i, (disk, src, dst) in enumerate(movimientos, 1):
+            print(f"Mover disco {disk} de {src} a {dst}")
+    else:
+        print("Son más de 10 discos. No se mostrarán los movimientos.")
 
     total = len(movimientos)
     print(f"\nTotal de movimientos: {total}")
