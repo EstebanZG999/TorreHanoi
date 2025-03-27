@@ -1,20 +1,35 @@
 #!/usr/bin/env python3
 
-from hanoi_dac import hanoi_dac_moves, hanoi_dac_count
-from hanoi_dp import hanoi_dp_moves, hanoi_dp_count
+from hanoi_dac import hanoi_dac_moves
+from hanoi_dp import hanoi_dp_moves
+from utils.timer import time_function
 
 def ejecutar_hanoi(metodo, discos):
-    print(f"\nResolviendo Torre de Hanoi con {discos} discos usando {metodo}...")
+    print(f"\nResolviendo Torre de Hanoi con {discos} discos usando {metodo}...\n")
+    # Selección del algoritmo según método
     if metodo == "DaC":
-        movimientos = hanoi_dac_moves(discos, 'A', 'C', 'B')
+        funcion = hanoi_dac_moves
     else:
-        movimientos = hanoi_dp_moves(discos, 'A', 'C', 'B')
+        funcion = hanoi_dp_moves
     
+    # Medir tiempo de ejecución
+    duracion, movimientos = medir_tiempo_y_ejecutar(funcion, discos)
+
+    # Mostrar movimientos
     for i, (disk, src, dst) in enumerate(movimientos, 1):
-        print(f"Paso {i}: Mover disco {disk} de {src} a {dst}")
+        print(f"Mover disco {disk} de {src} a {dst}")
 
     total = len(movimientos)
-    print(f"\nTotal de movimientos: {total}\n")
+    print(f"\nTotal de movimientos: {total}")
+    print(f"Tiempo de ejecución: {duracion:.6f} segundos\n")
+
+def medir_tiempo_y_ejecutar(funcion, discos):
+    """Ejecuta la función y mide el tiempo, devolviendo duración y resultado."""
+    from functools import partial
+    wrapped = partial(funcion, discos, 'A', 'C', 'B')
+    duracion = time_function(wrapped)
+    resultado = wrapped()
+    return duracion, resultado
 
 def menu():
     print("🔷 Bienvenido al juego de la Torre de Hanoi 🔷")
