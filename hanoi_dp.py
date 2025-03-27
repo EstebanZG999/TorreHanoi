@@ -21,7 +21,7 @@ def hanoi_dp_moves(n: int, source: str, destination: str, auxiliary: str):
     moves += hanoi_dp_moves(n-1, auxiliary, destination, source)
     return moves
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Torre de Hanoi — Programación Dinámica")
