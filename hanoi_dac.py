@@ -11,3 +11,7 @@ def hanoi_dac_moves(n, source, destination, auxiliary):
     yield from hanoi_dac_moves(n-1, source, auxiliary, destination)
     yield (n, source, destination)
     yield from hanoi_dac_moves(n-1, auxiliary, destination, source)
+
+def hanoi_dac_moves_gen(n, source, destination, auxiliary):
+    """Generador explícito para uso empírico."""
+    yield from hanoi_dac_moves(n, source, destination, auxiliary)
