@@ -1,30 +1,39 @@
-#!/usr/bin/env python3
-
-from hanoi_dac import hanoi_dac_moves
-from hanoi_dp import hanoi_dp_moves
+from hanoi_dac import hanoi_dac_moves, hanoi_dac_count
+from hanoi_dp import hanoi_dp_moves, hanoi_dp_count
 from utils.timer import time_function
 
 def ejecutar_hanoi(metodo, discos):
     print(f"\nResolviendo Torre de Hanoi con {discos} discos usando {metodo}...\n")
-    # Selección del algoritmo según método
-    if metodo == "DaC":
-        funcion = hanoi_dac_moves
-    else:
-        funcion = hanoi_dp_moves
-    
-    # Medir tiempo de ejecución
-    duracion, movimientos = medir_tiempo_y_ejecutar(funcion, discos)
 
-    # Mostrar movimientos solo si discos <= 10
+    # Selección de algoritmo
+    if metodo == "DaC":
+        count_fn = hanoi_dac_count
+        moves_fn = hanoi_dac_moves
+    else:
+        count_fn = hanoi_dp_count
+        moves_fn = hanoi_dp_moves
+
+    # Si n > 10 sólo contamos, no generamos movimientos
+    if discos > 10:
+        start = time_function(lambda: count_fn(discos))
+        total = count_fn(discos)
+        movimientos = []
+    else:
+        # Generar lista completa de movimientos
+        start = time_function(lambda: list(moves_fn(discos, 'A','C','B')))
+        movimientos = list(moves_fn(discos, 'A','C','B'))
+        total = len(movimientos)
+
+    # Mostrar pasos solo cuando discos <= 10
     if discos <= 10:
-        for i, (disk, src, dst) in enumerate(movimientos, 1):
+        for disk, src, dst in movimientos:
             print(f"Mover disco {disk} de {src} a {dst}")
     else:
         print("Son más de 10 discos. No se mostrarán los movimientos.")
 
-    total = len(movimientos)
     print(f"\nTotal de movimientos: {total}")
-    print(f"Tiempo de ejecución: {duracion:.6f} segundos\n")
+    print(f"Tiempo de ejecución: {start:.6f} segundos\n")
+
 
 def medir_tiempo_y_ejecutar(funcion, discos):
     """Ejecuta la función y mide el tiempo, devolviendo duración y resultado."""
