@@ -1,5 +1,5 @@
-from hanoi_dac import hanoi_dac_moves, hanoi_dac_count
-from hanoi_dp import hanoi_dp_moves, hanoi_dp_count
+from hanoi_dac import hanoi_dac_moves, hanoi_dac_count, hanoi_dac_moves_gen
+from hanoi_dp import hanoi_dp_moves, hanoi_dp_count, hanoi_dp_moves_gen
 from utils.timer import time_function
 
 def ejecutar_hanoi(metodo, discos):
@@ -7,22 +7,22 @@ def ejecutar_hanoi(metodo, discos):
 
     # Selección de algoritmo
     if metodo == "DaC":
-        count_fn = hanoi_dac_count
-        moves_fn = hanoi_dac_moves
+        moves_fn = hanoi_dac_moves_gen
     else:
-        count_fn = hanoi_dp_count
-        moves_fn = hanoi_dp_moves
+        moves_fn = hanoi_dp_moves_gen
 
-    # Si n > 10 sólo contamos, no generamos movimientos
-    if discos > 10:
-        start = time_function(lambda: count_fn(discos))
-        total = count_fn(discos)
-        movimientos = []
-    else:
-        # Generar lista completa de movimientos
-        start = time_function(lambda: list(moves_fn(discos, 'A','C','B')))
-        movimientos = list(moves_fn(discos, 'A','C','B'))
-        total = len(movimientos)
+    movimientos = []
+    total = 0
+
+    def recorrer():
+        nonlocal movimientos, total
+        for paso in moves_fn(discos, 'A', 'C', 'B'):
+            total += 1
+            if discos <= 10:
+                movimientos.append(paso)
+    
+    # Medir el tiempo real del recorrido
+    duracion = time_function(recorrer)
 
     # Mostrar pasos solo cuando discos <= 10
     if discos <= 10:
@@ -32,7 +32,7 @@ def ejecutar_hanoi(metodo, discos):
         print("Son más de 10 discos. No se mostrarán los movimientos.")
 
     print(f"\nTotal de movimientos: {total}")
-    print(f"Tiempo de ejecución: {start:.6f} segundos\n")
+    print(f"Tiempo de ejecución: {duracion:.6f} segundos\n")
 
 
 def medir_tiempo_y_ejecutar(funcion, discos):
