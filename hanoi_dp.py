@@ -16,3 +16,8 @@ def hanoi_dp_moves(n: int, source: str, destination: str, auxiliary: str):
     yield from hanoi_dp_moves(n-1, source, auxiliary, destination)
     yield (n, source, destination)
     yield from hanoi_dp_moves(n-1, auxiliary, destination, source)
+
+def hanoi_dp_moves_gen(n, source, destination, auxiliary):
+    """Generador explícito que recorre movimientos sin almacenarlos."""
+    for move in hanoi_dp_moves(n, source, destination, auxiliary):
+        yield move
